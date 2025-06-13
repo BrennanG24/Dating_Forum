@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="profile-header">
+    <div class="container">
+        <h2><i class="fas fa-envelope"></i> Messages</h2>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <div class="card-body p-0">
+            <ul class="nav nav-pills nav-fill mb-3 p-3" id="messageTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="received-tab" data-bs-toggle="tab" data-bs-target="#received" type="button">
+                        <i class="fas fa-inbox"></i> Received
+                        {% with unread_count=unread_messages_count %}
+                            {% if unread_count > 0 %}
+                                <span class="badge bg-danger">{{ unread_count }}</span>
+                            {% endif %}
+                        {% endwith %}
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sent-tab" data-bs-toggle="tab" data-bs-target="#sent" type="button">
+                        <i class="fas fa-paper-plane"></i> Sent
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content p-3" id="messageTabContent">
+                <div class="tab-pane fade show active" id="received" role="tabpanel">
+                    {% if received_messages %}
+                        {% for message in received_messages %}
+                            <div class="card message-card {% if not message.is_read %}border-warning{% endif %} mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ message.sender.userprofile.profile_picture.url }}" 
+                                                 class="rounded-circle me-2" 
+                                                 style="width: 40px; height: 40px; object-fit: cover;">
+                                            <div>
+                                                <h6 class="mb-0">{{ message.sender.username }}</h6>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock"></i> {{ message.timestamp|timesince }} ago
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            {% if not message.is_read %}
+                                                <span class="badge bg-warning text-dark">New</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="message-bubble">
+                                        {{ message.content }}
+                                    </div>
+                                    <div class="mt-2">
+                                        {% if not message.is_read %}
+                                            <a href="{% url 'mark_message_read' message.id %}" class="btn btn-sm btn-outline-warning">
+                                                <i class="fas fa-check"></i> Mark as Read
+                                            </a>
+                                        {% endif %}
+                                        <a href="{% url 'send_message' message.sender.id %}" class="btn btn-sm btn-bumble">
+                                            <i class="fas fa-reply"></i> Reply
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No messages received yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="tab-pane fade" id="sent" role="tabpanel">
+                    {% if sent_messages %}
+                        {% for message in sent_messages %}
+                            <div class="card message-card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <img src="{{ message.receiver.userprofile.profile_picture.url }}" 
+                                                 class="rounded-circle me-2" 
+                                                 style="width: 40px; height: 40px; object-fit: cover;">
+                                            <div>
+                                                <h6 class="mb-0">To: {{ message.receiver.username }}</h6>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock"></i> {{ message.timestamp|timesince }} ago
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <span class="badge {% if message.is_read %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {% if message.is_read %}
+                                                <i class="fas fa-check-double"></i> Read
+                                            {% else %}
+                                                <i class="fas fa-check"></i> Sent
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="message-bubble bg-light">
+                                        {{ message.content }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-paper-plane fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No messages sent yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

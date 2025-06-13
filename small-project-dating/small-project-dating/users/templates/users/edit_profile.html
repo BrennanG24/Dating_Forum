@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="profile-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2><i class="fas fa-edit"></i> Edit Profile</h2>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'profile' %}" class="btn btn-dark">
+                    <i class="fas fa-arrow-left"></i> Back to Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="age" class="form-label">
+                                <i class="fas fa-birthday-cake text-warning"></i> Age
+                            </label>
+                            <input type="number" class="form-control" id="age" name="age" 
+                                   value="{{ user.userprofile.age|default:'' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">
+                                <i class="fas fa-venus-mars text-warning"></i> Gender
+                            </label>
+                            <select class="form-select" id="gender" name="gender">
+                                <option value="">Choose...</option>
+                                <option value="Male" {% if user.userprofile.gender == 'Male' %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if user.userprofile.gender == 'Female' %}selected{% endif %}>Female</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="height" class="form-label">
+                                <i class="fas fa-ruler-vertical text-warning"></i> Height (cm)
+                            </label>
+                            <input type="number" step="0.1" class="form-control" id="height" name="height" 
+                                   value="{{ user.userprofile.height|default:'' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="career" class="form-label">
+                                <i class="fas fa-briefcase text-warning"></i> Career
+                            </label>
+                            <input type="text" class="form-control" id="career" name="career" 
+                                   value="{{ user.userprofile.career|default:'' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="income" class="form-label">
+                                <i class="fas fa-money-bill-wave text-warning"></i> Income
+                            </label>
+                            <input type="number" step="0.01" class="form-control" id="income" name="income" 
+                                   value="{{ user.userprofile.income|default:'' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="location" class="form-label">
+                                <i class="fas fa-map-marker-alt text-warning"></i> Location
+                            </label>
+                            <input type="text" class="form-control" id="location" name="location" 
+                                   value="{{ user.userprofile.location|default:'' }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contact_info" class="form-label">
+                                <i class="fas fa-envelope text-warning"></i> Contact Information
+                            </label>
+                            <input type="text" class="form-control" id="contact_info" name="contact_info" 
+                                   value="{{ user.userprofile.contact_info|default:'' }}">
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-bumble">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="profile-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2><i class="fas fa-user-circle"></i> My Profile</h2>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'edit_profile' %}" class="btn btn-dark">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Profile Picture Section -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="{{ user.userprofile.profile_picture.url }}" 
+                         class="rounded-circle mb-3" 
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                    <h4 class="mb-0">{{ user.username }}</h4>
+                    <p class="text-muted">
+                        {% if user.userprofile.is_online %}
+                            <span class="badge bg-success"><i class="fas fa-circle"></i> Online</span>
+                        {% else %}
+                            <span class="badge bg-secondary">
+                                <i class="fas fa-circle"></i> Last seen {{ user.userprofile.last_seen|timesince }} ago
+                            </span>
+                        {% endif %}
+                    </p>
+                    <button class="btn btn-bumble" data-bs-toggle="modal" data-bs-target="#updatePictureModal">
+                        <i class="fas fa-camera"></i> Update Picture
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Details Section -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Profile Details</h5>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <p class="mb-0"><i class="fas fa-birthday-cake text-warning"></i> Age</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ user.userprofile.age|default:"Not specified" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <p class="mb-0"><i class="fas fa-venus-mars text-warning"></i> Gender</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ user.userprofile.gender|default:"Not specified" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <p class="mb-0"><i class="fas fa-ruler-vertical text-warning"></i> Height</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ user.userprofile.height|default:"Not specified" }} cm</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <p class="mb-0"><i class="fas fa-briefcase text-warning"></i> Career</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ user.userprofile.career|default:"Not specified" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <p class="mb-0"><i class="fas fa-money-bill-wave text-warning"></i> Income</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ user.userprofile.income|default:"Not specified" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4">
+                            <p class="mb-0"><i class="fas fa-map-marker-alt text-warning"></i> Location</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ user.userprofile.location|default:"Not specified" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <p class="mb-0"><i class="fas fa-envelope text-warning"></i> Contact</p>
+                        </div>
+                        <div class="col-sm-8">
+                            <p class="text-muted mb-0">{{ user.userprofile.contact_info|default:"Not specified" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Picture Modal -->
+<div class="modal fade" id="updatePictureModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Profile Picture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{% url 'update_profile_picture' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="profile_picture" class="form-label">Choose a new picture</label>
+                        <input type="file" class="form-control" id="profile_picture" name="profile_picture" accept="image/*" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-bumble">Upload Picture</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

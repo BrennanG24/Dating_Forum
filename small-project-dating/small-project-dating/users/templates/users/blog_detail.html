@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="profile-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2><i class="fas fa-book-open"></i> Blog Post</h2>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'blog_list' %}" class="btn btn-dark">
+                    <i class="fas fa-arrow-left"></i> Back to Stories
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="max-height: 400px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h1 class="card-title mb-3">{{ post.title }}</h1>
+                    <div class="d-flex align-items-center mb-4">
+                        <img src="{{ post.user.userprofile.profile_picture.url }}" 
+                             class="rounded-circle me-2" 
+                             style="width: 40px; height: 40px; object-fit: cover;">
+                        <div>
+                            <h6 class="mb-0">{{ post.user.username }}</h6>
+                            <small class="text-muted">
+                                <i class="fas fa-calendar"></i> {{ post.created_at|date:"F d, Y" }}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="blog-content">
+                        {{ post.content|linebreaks }}
+                    </div>
+                </div>
+            </div>
+
+            {% if user == post.user %}
+                <div class="text-end mt-3">
+                    <a href="#" class="btn btn-outline-bumble">
+                        <i class="fas fa-edit"></i> Edit Post
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

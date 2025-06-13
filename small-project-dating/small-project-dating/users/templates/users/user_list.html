@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="profile-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2><i class="fas fa-fire"></i> Discover</h2>
+            <a href="{% url 'update_profile_picture' %}" class="btn btn-bumble">
+                <i class="fas fa-camera"></i> Update Profile Picture
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        {% for profile in profiles %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="position-relative">
+                        <img src="{{ profile.profile_picture.url }}" class="card-img-top" alt="{{ profile.user.username }}'s profile picture" style="height: 300px; object-fit: cover;">
+                        {% if profile.is_online %}
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="badge bg-success">
+                                    <i class="fas fa-circle"></i> Online
+                                </span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">{{ profile.user.username }}, {{ profile.age }}</h5>
+                            {% if not profile.is_online %}
+                                <small class="text-muted">
+                                    <i class="fas fa-clock"></i> {{ profile.last_seen|timesince }} ago
+                                </small>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <p class="card-text">
+                                <i class="fas fa-briefcase"></i> {{ profile.career }}<br>
+                                <i class="fas fa-ruler-vertical"></i> {{ profile.height }}cm<br>
+                                <i class="fas fa-money-bill-wave"></i> ${{ profile.income }}/year
+                            </p>
+                        </div>
+                        {% if user != profile.user %}
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'send_message' profile.user.id %}" class="btn btn-bumble">
+                                    <i class="fas fa-comment"></i> Send Message
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 
